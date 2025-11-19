@@ -2,7 +2,7 @@ import { ReactNode } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { Button } from '@/components/ui/button';
 import { LayoutDashboard, LogOut, Settings, Users } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 interface LayoutProps {
   children: ReactNode;
@@ -11,6 +11,7 @@ interface LayoutProps {
 const Layout = ({ children }: LayoutProps) => {
   const { user, role, signOut } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
 
   return (
     <div className="min-h-screen bg-background">
@@ -30,14 +31,24 @@ const Layout = ({ children }: LayoutProps) => {
           
           <div className="flex items-center gap-2">
             {role === 'admin' && (
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => navigate('/admin')}
-              >
-                <Settings className="h-4 w-4 mr-2" />
-                Configurar Pipeline
-              </Button>
+              <>
+                <Button
+                  variant={location.pathname === '/admin' ? 'secondary' : 'ghost'}
+                  size="sm"
+                  onClick={() => navigate('/admin')}
+                >
+                  <Settings className="h-4 w-4 mr-2" />
+                  Pipeline
+                </Button>
+                <Button
+                  variant={location.pathname === '/users' ? 'secondary' : 'ghost'}
+                  size="sm"
+                  onClick={() => navigate('/users')}
+                >
+                  <Users className="h-4 w-4 mr-2" />
+                  Usuários
+                </Button>
+              </>
             )}
             <Button variant="ghost" size="sm" onClick={signOut}>
               <LogOut className="h-4 w-4 mr-2" />
