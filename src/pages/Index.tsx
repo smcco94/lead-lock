@@ -15,6 +15,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
@@ -107,15 +108,7 @@ const Index = () => {
       if (pipelineError) throw pipelineError;
 
       if (!pipelineData) {
-        // No pipeline exists
-        if (role === 'admin') {
-          toast({
-            title: 'Configure o pipeline',
-            description: 'Você precisa configurar as etapas do funil primeiro.',
-            variant: 'default',
-          });
-          navigate('/admin');
-        }
+        // No pipeline exists - will show empty state in UI
         return;
       }
 
@@ -314,19 +307,38 @@ const Index = () => {
   if (!pipeline || stages.length === 0) {
     return (
       <Layout>
-        <div className="flex flex-col items-center justify-center min-h-[60vh] text-center">
-          <AlertCircle className="h-16 w-16 text-muted-foreground mb-4" />
-          <h2 className="text-2xl font-bold mb-2">Pipeline não configurado</h2>
-          <p className="text-muted-foreground mb-4">
-            {role === 'admin' 
-              ? 'Configure as etapas do funil para começar.'
-              : 'Aguarde um administrador configurar o pipeline.'}
-          </p>
-          {role === 'admin' && (
-            <Button onClick={() => navigate('/admin')}>
-              Configurar Pipeline
-            </Button>
-          )}
+        <div className="flex items-center justify-center min-h-[calc(100vh-8rem)]">
+          <Card className="max-w-xl w-full">
+            <CardHeader className="text-center">
+              <AlertCircle className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
+              <CardTitle className="text-2xl">Pipeline não configurado</CardTitle>
+            </CardHeader>
+            <CardContent className="text-center space-y-4">
+              {role === 'admin' ? (
+                <>
+                  <p className="text-muted-foreground">
+                    Configure o pipeline de vendas para começar a gerenciar negócios.
+                    Defina as etapas do funil e os campos personalizados para cada etapa.
+                  </p>
+                  <div className="flex flex-col sm:flex-row gap-3 justify-center pt-4">
+                    <Button onClick={() => navigate('/admin')} size="lg">
+                      Configurar Pipeline
+                    </Button>
+                    <Button onClick={() => navigate('/users')} variant="outline" size="lg">
+                      Gerenciar Usuários
+                    </Button>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <p className="text-muted-foreground">
+                    O administrador ainda não configurou o pipeline de vendas.
+                    Aguarde a configuração para começar a trabalhar com negócios.
+                  </p>
+                </>
+              )}
+            </CardContent>
+          </Card>
         </div>
       </Layout>
     );
