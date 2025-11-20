@@ -42,10 +42,10 @@ const UserManagement = () => {
   }, [user, loading, navigate]);
 
   useEffect(() => {
-    if (role !== 'admin') {
+    if (!loading && role && role !== 'admin') {
       navigate('/');
     }
-  }, [role, navigate]);
+  }, [role, loading, navigate]);
 
   useEffect(() => {
     if (user && role === 'admin') {
